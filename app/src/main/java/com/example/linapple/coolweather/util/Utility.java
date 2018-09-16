@@ -22,7 +22,7 @@ public class Utility {
      * @return
      */
     public static boolean handleProvinceResponse(String response){
-        if (TextUtils.isEmpty(response)){
+        if (!TextUtils.isEmpty(response)){
             try{
                 JSONArray allProvinces = new JSONArray(response);
                 for(int i = 0; i < allProvinces.length(); i++){
@@ -47,7 +47,7 @@ public class Utility {
      * @return
      */
     public static boolean handleCityResponse(String response, int provinceId){
-        if (TextUtils.isEmpty(response)){
+        if (!TextUtils.isEmpty(response)){
             try{
                 JSONArray allCites = new JSONArray(response);
                 for(int i = 0; i < allCites.length(); i++){
@@ -73,14 +73,14 @@ public class Utility {
      * @return
      */
     public static boolean handleCountyResponse(String response, int cityId){
-        if (TextUtils.isEmpty(response)){
+        if (!TextUtils.isEmpty(response)){
             try{
                 JSONArray allCounties = new JSONArray(response);
                 for(int i = 0; i < allCounties.length(); i++){
                     JSONObject countyObject = allCounties.getJSONObject(i);
                     County county = new County();
                     county.setCountyName(countyObject.getString("name"));
-                    county.setWeatherId(countyObject.getInt("weather_id"));
+                    county.setWeatherId(countyObject.getString("weather_id"));
                     county.setCityId(cityId);
                     county.save();
                 }
