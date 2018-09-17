@@ -218,7 +218,7 @@ public class ChooseAreaFragment extends Fragment {
     private void queryFromServer(String address, final String type){
         showProgressDialog();
 
-        HttpUtil.sendOkHttpRequest(address, new okhttp3.Callback(){
+        HttpUtil.sendOkHttpRequest(address, new Callback(){
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 //在这里根据返回内容执行具体的逻辑

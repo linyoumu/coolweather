@@ -1,5 +1,6 @@
 package com.example.linapple.coolweather;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
@@ -9,6 +10,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,12 +24,14 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.linapple.coolweather.gson.Forecast;
 import com.example.linapple.coolweather.gson.Weather;
+import com.example.linapple.coolweather.service.AutoUpdateService;
 import com.example.linapple.coolweather.util.HttpUtil;
 import com.example.linapple.coolweather.util.Utility;
 
 import java.io.IOException;
 
 import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.Response;
 
 public class WeatherActivity extends AppCompatActivity {
@@ -136,7 +140,7 @@ public class WeatherActivity extends AppCompatActivity {
     public void requestWeather(final String weatherId){
         String weatherUrl = "http://guolin.tech/api/weather?cityid=" + weatherId + "&key=281d25eb68e94fd98a01722b9e2eb398";
 
-        HttpUtil.sendOkHttpRequest(weatherUrl, new okhttp3.Callback(){
+        HttpUtil.sendOkHttpRequest(weatherUrl, new Callback(){
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 //在这里根据返回内容执行具体的逻辑
@@ -183,7 +187,7 @@ public class WeatherActivity extends AppCompatActivity {
     private void loadBingPic(){
 
         String requestBingPic = "http://guolin.tech/api/bing_pic";
-        HttpUtil.sendOkHttpRequest(requestBingPic, new okhttp3.Callback(){
+        HttpUtil.sendOkHttpRequest(requestBingPic, new Callback(){
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 //在这里根据返回内容执行具体的逻辑
@@ -193,12 +197,12 @@ public class WeatherActivity extends AppCompatActivity {
                 editor.putString("bing_pic", bingPic);
                 editor.apply();
 
-//                runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        Glide.with(WeatherActivity.this).load(bingPicImg).into(bingPicImg);
-//                    }
-//                });
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Glide.with(WeatherActivity.this).load(bingPic).into(bingPicImg);
+                    }
+                });
 
             }
 
@@ -248,6 +252,9 @@ public class WeatherActivity extends AppCompatActivity {
         carWashText.setText(carWash);
         sportText.setText(sport);
         weatherLayout.setVisibility(View.VISIBLE);
+
+        Intent intent = new Intent(this, AutoUpdateService.class);
+        startService(intent);
     }
 
 }
